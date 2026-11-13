@@ -1,8 +1,8 @@
 {
 	"id": "usage-meter",
 	"name": "Usage Meter",
-	"version": "0.2.0",
-	"description": "현재 대화 모델의 제공자(Claude, Codex, Copilot, Z.ai, DeepSeek) 사용량·잔여 크레딧을 하단 바에 표시. 누르면 상세 카드.",
+	"version": "0.3.0",
+	"description": "현재 대화 모델의 제공자(Claude, Codex, Copilot, Z.ai, DeepSeek) 사용량·잔여 크레딧을 하단 바와 모델 관리 창에 표시. 모델 관리 창 표시는 DOM 접근 허용이 필요합니다.",
 	"descriptionEn": "Shows usage limits / remaining credit for providers logged in to pi in the bottom bar",
 	"author": "pshpjr",
 	"icon": "📊",
@@ -11,7 +11,8 @@
 	"view": false,
 	"permissions": [
 		"http",
-		"net"
+		"net",
+		"dom"
 	],
 	"netAllowlist": [
 		"api.anthropic.com",

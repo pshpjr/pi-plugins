@@ -251,6 +251,26 @@ export default {
 				.catch((e) => res.status(500).json({ ok: false, error: String(e?.message || e) }));
 		});
 
+		// Per-provider card for the Model Studio injection: ?id=claude|codex|copilot|zai|deepseek
+		host.route("GET", "/provider", (req, res) => {
+			const id = String(req?.query?.id ?? "");
+			if (!collectors[id]) return res.status(400).json({ ok: false, error: "unknown provider" });
+			const force = String(req?.query?.force ?? "") === "1";
+			load(id, force)
+				.then((r) =>
+					res.json({
+						ok: true,
+						id,
+						name: NAME[id],
+						label: r.label,
+						lines: String(r.hint || "").split(" / ").filter(Boolean),
+						error: !!r.error,
+						updatedAt: new Date(r.at).toISOString(),
+					}),
+				)
+				.catch((e) => res.status(500).json({ ok: false, error: String(e?.message || e) }));
+		});
+
 		host.onClientModelChanged?.((snap) => {
 			const m = modelOf(snap);
 			if (m) state.model = m;
