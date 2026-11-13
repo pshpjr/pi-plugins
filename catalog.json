@@ -80,5 +80,14 @@
 		"source": "pshpjr/pi-plugins/browser-use",
 		"homepage": "https://github.com/pshpjr/pi-plugins/tree/main/browser-use",
 		"iconSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20\"/><path d=\"M2 12h20\"/></svg>"
+	},
+	{
+		"id": "obsidian-vault",
+		"name": "Obsidian Vault",
+		"version": "0.1.0",
+		"icon": "🗂️",
+		"description": "obsidian-web MCP의 볼트 도구를 vault_* 에이전트 도구로 붙입니다. 도구마다 상시/필요할 때/끄기를 따로 정할 수 있습니다.",
+		"source": "pshpjr/pi-plugins/obsidian-vault",
+		"homepage": "https://github.com/pshpjr/pi-plugins/tree/main/obsidian-vault"
 	}
 ]

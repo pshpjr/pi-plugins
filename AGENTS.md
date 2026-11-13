@@ -9,6 +9,7 @@
 |---|---|---|---|
 | `usage-meter` | 직접 만듦 | 현재 모델 제공자의 사용량·잔여 크레딧 | 하단 바 비용 칸(`setFooterStatus`) + 클릭 팝오버 |
 | `context-lens` | 직접 만듦 | 현재 대화 컨텍스트 분석(dsh-context 방식) | 오른쪽 패널 탭 "Context" |
+| `obsidian-vault` | 직접 만듦 | obsidian-web MCP 도구를 `vault_*` 에이전트 도구로 붙임(시작 때 `tools/list`를 받아 등록, 호출은 `/mcp`로 전달). pi-web-ui MCP 연결은 접두사 없이 늘 실려서 대신 씀 | 설정 → 도구(도구별 상시/필요할 때/끄기) |
 | `notes` | 포크 | 메모·할 일·알림 | |
 | `webmail` | 포크 | IMAP/SMTP 메일 | |
 | `pm2-manager` | 포크 | PM2 프로세스 관리 | |

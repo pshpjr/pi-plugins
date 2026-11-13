@@ -1,0 +1,38 @@
+{
+	"id": "obsidian-vault",
+	"name": "Obsidian Vault",
+	"version": "0.1.0",
+	"description": "obsidian-web MCP의 볼트 도구를 vault_* 에이전트 도구로 붙입니다. 도구마다 상시/필요할 때/끄기를 따로 정할 수 있습니다.",
+	"descriptionEn": "Exposes the obsidian-web MCP vault tools as vault_* agent tools, each switchable to always/on-demand/off.",
+	"author": "pshpjr",
+	"icon": "🗂️",
+	"apiVersion": 2,
+	"server": "index.mjs",
+	"view": false,
+	"permissions": [
+		"tools"
+	],
+	"settings": [
+		{
+			"key": "url",
+			"type": "text",
+			"label": "MCP 주소",
+			"default": "http://127.0.0.1:55020/mcp",
+			"hint": "obsidian-web의 /mcp. 신뢰망(루프백·LAN)이면 토큰 없이 붙습니다."
+		},
+		{
+			"key": "token",
+			"type": "text",
+			"label": "토큰(선택)",
+			"default": "",
+			"hint": "신뢰망 밖이면 obsidian-web의 mcp/token 값. Authorization: Bearer로 보냅니다."
+		},
+		{
+			"key": "prefix",
+			"type": "text",
+			"label": "도구 이름 접두사",
+			"default": "vault_",
+			"hint": "pi 기본 read·edit와 겹치지 않게 붙입니다. 바꾸면 플러그인을 다시 불러오세요."
+		}
+	]
+}
