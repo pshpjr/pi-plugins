@@ -1,0 +1,4 @@
+LOCAL.md
+node_modules/
+.upstream/
+*.log

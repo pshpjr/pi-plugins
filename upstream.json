@@ -1,0 +1,12 @@
+{
+  "repo": "xing-shuyin/pi-web-ui",
+  "commit": "111b561bb4f2dce7e6e7af03b7a1b8216c90f8a5",
+  "path": "plugins/<id>",
+  "plugins": [
+    "notes",
+    "webmail",
+    "pm2-manager",
+    "response-speed",
+    "browser-use"
+  ]
+}

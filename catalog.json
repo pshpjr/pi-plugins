@@ -1,0 +1,84 @@
+[
+	{
+		"id": "usage-meter",
+		"name": "Usage Meter",
+		"nameEn": "Usage Meter",
+		"version": "0.2.0",
+		"icon": "📊",
+		"description": "현재 대화 모델의 제공자(Claude, Codex, Copilot, Z.ai, DeepSeek) 사용량·잔여 크레딧을 하단 바에 표시. 누르면 상세 카드.",
+		"descriptionEn": "Shows usage limits / remaining credit for providers logged in to pi in the bottom bar",
+		"source": "pshpjr/pi-plugins/usage-meter",
+		"homepage": "https://github.com/pshpjr/pi-plugins/tree/main/usage-meter"
+	},
+	{
+		"id": "context-lens",
+		"name": "Context Lens",
+		"nameEn": "Context Lens",
+		"version": "0.1.0",
+		"icon": "🔬",
+		"description": "현재 대화의 컨텍스트 구성(시스템 프롬프트·도구 정의·메시지·도구 결과)을 토큰 단위로 분석. 단계별 추이, 압축 이벤트, 파일·명령 활동, 실제 내용 열람.",
+		"descriptionEn": "dsh-context style breakdown of what is in the current conversation's context window",
+		"source": "pshpjr/pi-plugins/context-lens",
+		"homepage": "https://github.com/pshpjr/pi-plugins/tree/main/context-lens"
+	},
+	{
+		"id": "notes",
+		"name": "笔记",
+		"nameEn": "Notes",
+		"version": "0.4.6",
+		"icon": "📓",
+		"description": "现代闪念速记：极简无标题随手记、就地快速编辑、支持设置定时提醒，笔记与日历双视图合一。顶栏按钮打开全局浮窗，配合 AI 工具随时捕捉灵感与备忘。",
+		"descriptionEn": "Modern quick-capture notes: frictionless title-free memos, rapid inline editing, scheduled reminders, and integrated notes & calendar tabs. A floating panel plus AI tools to capture ideas anytime.",
+		"source": "pshpjr/pi-plugins/notes",
+		"homepage": "https://github.com/pshpjr/pi-plugins/tree/main/notes",
+		"iconSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1024 1024\"><path d=\"M746.666667 64a170.666667 170.666667 0 0 1 170.666666 170.666667v554.666666a170.666667 170.666667 0 0 1-170.666666 170.666667H298.666667a170.666667 170.666667 0 0 1-170.666667-170.666667V234.666667a170.666667 170.666667 0 0 1 170.666667-170.666667h448z m0 74.666667H298.666667a96 96 0 0 0-95.893334 91.477333L202.666667 234.666667v554.666666a96 96 0 0 0 91.477333 95.893334L298.666667 885.333333h448a96 96 0 0 0 95.893333-91.477333L842.666667 789.333333V234.666667a96 96 0 0 0-91.477334-95.893334L746.666667 138.666667z\" fill=\"currentColor\"/><path d=\"M224 325.333333a37.333333 37.333333 0 0 1 3.072 74.538667l-3.072 0.128H106.666667a37.333333 37.333333 0 0 1-3.072-74.538667L106.666667 325.333333h117.333333zM224 624a37.333333 37.333333 0 0 1 3.072 74.538667l-3.072 0.128H106.666667a37.333333 37.333333 0 0 1-3.072-74.538667L106.666667 624h117.333333zM693.333333 346.666667a37.333333 37.333333 0 0 1 37.205334 34.261333l0.128 3.072v256a37.333333 37.333333 0 0 1-74.538667 3.072L656 640V384c0-20.608 16.725333-37.333333 37.333333-37.333333z\" fill=\"currentColor\"/></svg>"
+	},
+	{
+		"id": "webmail",
+		"name": "邮箱",
+		"nameEn": "邮箱",
+		"version": "0.2.7",
+		"icon": "📬",
+		"description": "IMAP/SMTP 邮件管理：收件箱浏览/搜索/读写、新邮件通知，AI 可直接管理邮箱",
+		"descriptionEn": "Web mail: IMAP inbox + SMTP send + new-mail notifications, optionally let the AI manage mail.",
+		"source": "pshpjr/pi-plugins/webmail",
+		"homepage": "https://github.com/pshpjr/pi-plugins/tree/main/webmail",
+		"iconSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z\"/><polyline points=\"22,6 12,13 2,6\"/></svg>"
+	},
+	{
+		"id": "pm2-manager",
+		"name": "进程管家",
+		"nameEn": "Process Manager",
+		"version": "0.4.0",
+		"icon": "🚀",
+		"description": "pm2 安装/管理/卸载一体：未装 pm2 时一键安装；面板可直接启动新应用（安装到 pm2），应用表看状态/日志、做停止/重启/删除；不用时一键卸载 pm2 本体。宿主顶栏「后台任务」面板与插件面板看的是同一份列表（状态/CPU/内存/重启次数/时长/日志）。插件不拦截 AI 的任何命令，只提供工具与面板，管不管由模型和用户自行决定。",
+		"descriptionEn": "One-stop pm2 install/manage/uninstall: one-click install when missing; start new apps straight from the panel; per-app stop/restart/delete/logs from a shared list (status/CPU/memory/restarts/uptime/logs) with the host background-tasks panel; one-click uninstall of pm2 itself when unused. The plugin never intercepts AI commands — it only offers the tool and the panel; whether a process goes through pm2 is up to the model and the user.",
+		"source": "pshpjr/pi-plugins/pm2-manager",
+		"homepage": "https://github.com/pshpjr/pi-plugins/tree/main/pm2-manager",
+		"iconSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2\" y=\"2\" width=\"20\" height=\"8\" rx=\"2\"/><rect x=\"2\" y=\"14\" width=\"20\" height=\"8\" rx=\"2\"/><line x1=\"6\" y1=\"6\" x2=\"6.01\" y2=\"6\"/><line x1=\"6\" y1=\"18\" x2=\"6.01\" y2=\"18\"/></svg>"
+	},
+	{
+		"id": "response-speed",
+		"name": "响应速度",
+		"nameEn": "Response Speed",
+		"version": "0.3.4",
+		"icon": "⚡",
+		"description": "在底部状态栏实时显示当前对话最新请求与平均 AI 响应速度（TTFT），每个对话独立记录，支持 AI 自循环每次独立测速，点击底栏可查看当前对话的统计明细看板与历史记录。",
+		"descriptionEn": "Real-time tracking of AI response speed (TTFT) for the current conversation showing both latest and average in the bottom status bar, with independent records per conversation and per AI turn/self-loop, and click-to-view details dashboard.",
+		"source": "pshpjr/pi-plugins/response-speed",
+		"homepage": "https://github.com/pshpjr/pi-plugins/tree/main/response-speed",
+		"iconSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polygon points=\"13 2 3 14 12 14 11 22 21 10 12 10 13 2\"/></svg>"
+	},
+	{
+		"id": "browser-use",
+		"name": "browser-use",
+		"nameEn": "browser-use",
+		"version": "0.10.2",
+		"icon": "🌐",
+		"description": "常驻 Chrome 自动化与全能智能搜索：支持无头静默运行与实体窗口切换、受后台任务面板精确管理；单一 browser_use 工具同时承载搜索（action=\"search\"，标签页隔离、无图极速渲染、搜阅一体、时效过滤、官网认证置顶、域名多样性、真实落地页并发还原与智能降级）与页面交互、read_page 纯净阅读以及控制台日志实时捕获（Console）。",
+		"descriptionEn": "Persistent Chrome automation & smart search: headless mode, background tasks; one browser_use tool covering action=search, page interaction, console log inspection, and read_page clean extraction.",
+		"source": "pshpjr/pi-plugins/browser-use",
+		"homepage": "https://github.com/pshpjr/pi-plugins/tree/main/browser-use",
+		"iconSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20\"/><path d=\"M2 12h20\"/></svg>"
+	}
+]
