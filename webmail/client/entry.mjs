@@ -54,6 +54,7 @@ const KO = {
 	"🤖 当前会话模型": "🤖 현재 세션 모델",
 	"未知": "알 수 없음",
 	"未配置": "미설정",
+	"尚未配置 IMAP 账号": "IMAP 계정이 설정되지 않았습니다",
 	"已连接": "연결됨",
 	"已保存（输入可覆盖）": "저장됨(입력하면 덮어씁니다)",
 	"密码": "비밀번호",
@@ -580,7 +581,9 @@ export default {
 
 		function setStateChips(state) {
 			const chip = $(".st");
-			chip.textContent = tr(state.status) || tr("未知");
+			chip.textContent =
+				(IS_KO && state.status?.startsWith("连接失败") ? "연결 실패" + state.status.slice(4).replace(/^：/, ": ") : tr(state.status)) ||
+				tr("未知");
 			chip.className = `chip st ${state.configured ? (state.status.startsWith("连接失败") ? "err" : "ok") : ""}`;
 			const badge = $(".unseen");
 			badge.hidden = !state.unseen;

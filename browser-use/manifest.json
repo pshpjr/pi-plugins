@@ -1,61 +1,73 @@
 {
 	"id": "browser-use",
 	"name": "browser-use",
-	"version": "0.10.2",
+	"version": "0.10.2-ko.1",
 	"icon": "🌐",
 	"iconSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20\"/><path d=\"M2 12h20\"/></svg>",
-	"description": "常驻 Chrome 自动化与全能智能搜索：支持无头静默运行与实体窗口切换、受后台任务面板精确管理；单一 browser_use 工具同时承载搜索（action=\"search\"，标签页隔离、无图极速渲染、搜阅一体、时效过滤、官网认证置顶、域名多样性、真实落地页并发还原与智能降级）与页面交互、read_page 纯净阅读以及控制台日志实时捕获（Console）。",
+	"description": "상주 Chrome 자동화와 통합 검색: 백그라운드(헤드리스)와 실제 창 전환, 검색 엔진 자동 전환, 빠른 검색 모드, 검색 전용 탭을 지원합니다.",
 	"descriptionEn": "Persistent Chrome automation & smart search: headless mode, background tasks; one browser_use tool covering action=search, page interaction, console log inspection, and read_page clean extraction.",
 	"apiVersion": 2,
-	"permissions": ["tools"],
+	"permissions": [
+		"tools"
+	],
 	"view": false,
 	"settings": [
 		{
 			"key": "headless",
 			"type": "boolean",
-			"label": "无头模式 (Headless)",
+			"label": "헤드리스 모드",
 			"labelEn": "Headless Mode",
 			"default": true,
-			"hint": "开启后浏览器在后台静默运行不弹出窗口；关闭后会显示实体 Chrome 桌面窗口",
+			"hint": "켜면 브라우저가 창 없이 백그라운드에서 돌고, 끄면 실제 Chrome 창이 보입니다.",
 			"hintEn": "Run Chrome silently in background without GUI window; disable to display desktop Chrome window"
 		},
 		{
 			"key": "idleTimeoutMinutes",
 			"type": "number",
-			"label": "闲置自动关闭（分钟）",
+			"label": "유휴 시 자동 종료(분)",
 			"labelEn": "Idle Auto-Close (minutes)",
 			"default": 15,
 			"min": 0,
 			"max": 180,
-			"hint": "浏览器无任何操作达到该时长后自动关闭以释放内存；设为 0 表示永不自动关闭",
+			"hint": "이 시간 동안 아무 조작이 없으면 메모리를 비우려고 브라우저를 닫습니다. 0이면 닫지 않습니다.",
 			"hintEn": "Automatically close the browser to release RAM when idle for this duration; set to 0 to disable"
 		},
 		{
 			"key": "defaultEngine",
 			"type": "select",
-			"label": "默认搜索引擎 (Default Engine)",
+			"label": "기본 검색 엔진",
 			"labelEn": "Default Search Engine",
 			"default": "auto",
-			"options": ["auto", "bing", "baidu", "sogou", "so", "google", "duckduckgo", "brave", "yahoo"],
-			"hint": "未显式指定搜索引擎时的默认首选项；遇验证码或反爬会自动按降级链重试",
+			"options": [
+				"auto",
+				"bing",
+				"baidu",
+				"sogou",
+				"so",
+				"google",
+				"duckduckgo",
+				"brave",
+				"yahoo"
+			],
+			"hint": "검색 엔진을 지정하지 않았을 때 먼저 쓰는 엔진. 캡차나 차단을 만나면 다음 엔진으로 자동 재시도합니다.",
 			"hintEn": "Default preferred engine when unspecified; automatically falls back on error/captcha"
 		},
 		{
 			"key": "fastSearch",
 			"type": "boolean",
-			"label": "极速搜索模式 (Fast Search)",
+			"label": "빠른 검색 모드",
 			"labelEn": "Fast Search (Block Media & Images)",
 			"default": true,
-			"hint": "搜索时通过 CDP 阻断图片、字体与媒体资源下载，页面毫秒级解析，大幅节省宽带与耗时",
+			"hint": "검색할 때 CDP로 이미지·글꼴·미디어 다운로드를 막아 페이지를 빨리 읽고 대역폭을 아낍니다.",
 			"hintEn": "Block images, fonts and media during search via CDP for sub-second SERP extraction"
 		},
 		{
 			"key": "searchTabIsolation",
 			"type": "boolean",
-			"label": "搜索标签页隔离 (Tab Isolation)",
+			"label": "검색 탭 분리",
 			"labelEn": "Search Tab Isolation",
 			"default": true,
-			"hint": "在后台专用标签页执行搜索，不打扰或覆盖您当前前台正在浏览交互的网页",
+			"hint": "검색을 백그라운드 전용 탭에서 실행해 지금 보고 있는 페이지를 건드리지 않습니다.",
 			"hintEn": "Perform web search in dedicated worker tab without hijacking or reloading active user tab"
 		}
 	]
