@@ -815,8 +815,38 @@ function parseDateText(text, nowMs) {
 	return null;
 }
 
+// ko fork: rewrite Korean date/time words into the Chinese forms the parsers below understand.
+// Input without Hangul is returned unchanged, so zh/en behaviour is identical to upstream.
+const KO_DOW = { 월: "一", 화: "二", 수: "三", 목: "四", 금: "五", 토: "六", 일: "日" };
+export function normalizeKo(input, nowMs = Date.now()) {
+	let t = String(input ?? "");
+	if (!/[가-힣]/.test(t)) return t;
+	t = t.replace(/(오전|오후|저녁|밤|새벽|아침)?\s*(\d{1,2})\s*시\s*(?:(반)|(\d{1,2})\s*분)?/g, (_m, ap, h, half, mi) => {
+		let hh = Number(h);
+		if ((ap === "오후" || ap === "저녁" || ap === "밤") && hh < 12) hh += 12;
+		if ((ap === "오전" || ap === "새벽" || ap === "아침") && hh === 12) hh = 0;
+		const mm = half ? 30 : mi ? Number(mi) : 0;
+		return ` ${hh}:${String(mm).padStart(2, "0")} `;
+	});
+	t = t.replace(/(\d{1,3})\s*분\s*마다/g, " 每$1分钟 ").replace(/(\d{1,3})\s*시간\s*마다/g, " 每$1小时 ");
+	t = t.replace(/매\s*월\s*(\d{1,2})\s*일/g, " 每月$1日 ");
+	t = t.replace(/매\s*일/g, " 每天 ");
+	// "다음 주 X요일" = X of next calendar week (Monday-start), written as an explicit date.
+	t = t.replace(/(다다음|다음)\s*주\s*([월화수목금토일])요일/g, (_m, pre, d) => {
+		const base = new Date(nowMs);
+		const idx = (base.getDay() + 6) % 7; // Monday = 0
+		const want = ("월화수목금토일").indexOf(d);
+		const day = new Date(base.getFullYear(), base.getMonth(), base.getDate() - idx + (pre === "다다음" ? 14 : 7) + want);
+		return ` ${day.getMonth() + 1}月${day.getDate()}日 `;
+	});
+	t = t.replace(/(매\s*주)?\s*([월화수목금토일])요일/g, (_m, pre, d) => ` ${pre ? "每" : ""}周${KO_DOW[d]} `);
+	t = t.replace(/글피/g, " 大后天 ").replace(/모레/g, " 后天 ").replace(/내일/g, " 明天 ").replace(/오늘/g, " 今天 ");
+	t = t.replace(/(\d{1,2})\s*월\s*(\d{1,2})\s*일/g, " $1月$2日 ");
+	return t.replace(/\s+/g, " ").trim();
+}
+
 export function parseQuickTodo(input, nowMs = Date.now()) {
-	let text = String(input ?? "").trim();
+	let text = normalizeKo(input, nowMs).trim();
 	const out = { text: "", due: null, priority: 0, tags: [] };
 	const tagMatches = text.match(/#[^\s#]{1,32}/g) ?? [];
 	if (tagMatches.length) {
@@ -847,7 +877,7 @@ export function parseQuickTodo(input, nowMs = Date.now()) {
 }
 
 export function parseQuickReminder(input, nowMs = Date.now()) {
-	let text = String(input ?? "").trim();
+	let text = normalizeKo(input, nowMs).trim();
 	const every = /每\s*(\d{1,3})\s*(分钟|min|小时|h)/i.exec(text);
 	if (every) {
 		const n = Number(every[1]);

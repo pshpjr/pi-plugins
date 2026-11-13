@@ -62,6 +62,7 @@ export function createSettings({ t, data, onNotify, extra = [] }) {
 				["auto", `${t("settings.lang")} · auto`],
 				["zh", "中文"],
 				["en", "English"],
+				["ko", "한국어"],
 			].map(([value, label]) => el("option", { value, selected: prefs.lang === value, text: label })),
 		);
 		root.append(

@@ -41,6 +41,7 @@ export const DICT = {
 		"empty.agenda": "接下来没有安排。",
 		"empty.search": "没有匹配的条目。",
 		"empty.list": "这里是空的。",
+		"note.untitled": "未命名笔记",
 
 		"field.title": "标题",
 		"field.body": "正文",
@@ -86,6 +87,7 @@ export const DICT = {
 		"rem.snooze": "推迟 10 分钟",
 		"rem.enabledOn": "已启用",
 		"rem.enabledOff": "已停用",
+		"unit.day": "日",
 
 		"due.overdue": "已逾期",
 		"due.today": "今天",
@@ -129,6 +131,7 @@ export const DICT = {
 		"action.copy": "复制",
 		"action.quote": "添加到输入框",
 		"action.composerBusy": "输入框没就绪，已复制到剪贴板",
+		"hint.clickAgain": "(再次点击确认)",
 
 		"confirm.delete": "删除「{name}」？",
 		"confirm.clearDone": "清除 {n} 条已完成待办？",
@@ -211,6 +214,7 @@ export const DICT = {
 		"empty.agenda": "Nothing scheduled ahead.",
 		"empty.search": "Nothing matches.",
 		"empty.list": "Nothing here.",
+		"note.untitled": "未命名笔记",
 
 		"field.title": "Title",
 		"field.body": "Body",
@@ -256,6 +260,7 @@ export const DICT = {
 		"rem.snooze": "Snooze 10 min",
 		"rem.enabledOn": "Enabled",
 		"rem.enabledOff": "Disabled",
+		"unit.day": "日",
 
 		"due.overdue": "Overdue",
 		"due.today": "Today",
@@ -299,6 +304,7 @@ export const DICT = {
 		"action.copy": "Copy",
 		"action.quote": "Add to input",
 		"action.composerBusy": "Composer not ready, copied to clipboard instead",
+		"hint.clickAgain": "(再次点击确认)",
 
 		"confirm.delete": "Delete “{name}”?",
 		"confirm.clearDone": "Clear {n} completed todos?",
@@ -339,22 +345,198 @@ export const DICT = {
 		"week.5": "Fri",
 		"week.6": "Sat",
 	},
+	ko: {
+		"app.title": "노트",
+		"app.subtitle": "노트 · 할 일 · 알림",
+
+		"tab.todo": "할 일",
+		"tab.note": "노트",
+		"tab.reminder": "알림",
+		"tab.agenda": "일정",
+		"tab.calendar": "달력",
+
+		"quick.todo": "예: 주간 보고 제출 내일 오후 6시 #업무 !!",
+		"quick.note": "떠오른 생각을 바로 적어 두세요… (Ctrl+Enter 저장)",
+		"quick.notePlaceholder": "떠오른 생각을 바로 적어 두세요… (Markdown 지원, Ctrl+Enter 저장)",
+		"quick.reminder": "예: 매일 오전 9시 약 먹기",
+		"quick.add": "추가",
+		"quick.save": "기록",
+		"quick.setReminder": "알림 설정",
+		"quick.clearReminder": "알림 해제",
+		"quick.smartSuggest": "{time}에 알림 설정",
+		"quick.preset1h": "1시간 뒤",
+		"quick.presetTonight": "오늘 밤 20:00",
+		"quick.presetTomorrow": "내일 09:00",
+		"quick.presetTomorrowPm": "내일 15:00",
+		"quick.presetAfterTomorrow": "모레 09:00",
+		"quick.presetNextMonday": "다음 주 월요일 09:00",
+		"quick.customTime": "직접 시간 지정…",
+		"quick.newNoteOnDay": "이 날짜에 노트 남기기",
+		"quick.now": "방금",
+		"quick.ago": "{m}분 전",
+		"quick.todayAt": "오늘 {t}",
+		"quick.yesterdayAt": "어제 {t}",
+		"quick.hintTodo": "‘내일 오후 6시’, ‘금요일’, ‘다음 주 월요일’, ‘#태그’, ‘!!’ 같은 표현을 인식합니다",
+		"quick.hintNote": "텍스트가 그대로 기록됩니다. Ctrl+Enter로 바로 저장하세요.",
+		"quick.hintReminder": "‘매일 오전 9시 …’, ‘매주 금요일 오후 6시 …’, ‘30분마다 …’, ‘내일 밤 9시 …’ 같은 표현을 인식합니다",
+
+		"search.placeholder": "노트와 태그 검색…",
+		"empty.todo": "아직 할 일이 없습니다. 위 입력란에 한 줄 쓰고 Enter를 누르면 됩니다.",
+		"empty.note": "아직 노트가 없습니다. 위에 텍스트를 바로 쓰고 Enter를 누르면 됩니다.",
+		"empty.reminder": "아직 알림이 없습니다. ‘매일 오전 9시 약 먹기’처럼 입력해 보세요.",
+		"empty.agenda": "앞으로 예정된 일이 없습니다.",
+		"empty.search": "일치하는 항목이 없습니다.",
+		"empty.list": "여기는 비어 있습니다.",
+		"note.untitled": "제목 없음",
+
+		"field.title": "제목",
+		"field.body": "본문",
+		"field.bodyHint": "Markdown 원문 그대로 (일반 텍스트로 편집, 렌더링하지 않음)",
+		"field.tags": "태그",
+		"field.tagsHint": "공백 또는 쉼표로 구분",
+		"field.pinned": "고정",
+		"field.text": "내용",
+		"field.priority": "우선순위",
+		"field.due": "기한",
+		"field.repeat": "반복",
+		"field.noteText": "메모",
+		"field.schedule": "시간",
+		"field.enabled": "사용",
+		"field.cron": "cron 표현식",
+		"field.time": "시각",
+		"field.dow": "요일",
+		"field.dom": "매월 며칠",
+		"field.minutes": "간격(분)",
+		"field.minutesHint": "1 .. 10080 (7일). 기준은 직전 알림 시각부터 이어지므로 조금씩 밀리지 않습니다",
+		"field.at": "날짜와 시각",
+
+		"repeat.none": "반복 없음",
+		"repeat.daily": "매일",
+		"repeat.weekly": "매주",
+		"repeat.monthly": "매월",
+		"pri.0": "보통",
+		"pri.1": "낮음",
+		"pri.2": "높음",
+		"pri.3": "긴급",
+
+		"type.once": "1회",
+		"type.daily": "매일",
+		"type.weekly": "매주",
+		"type.monthly": "매월",
+		"type.every": "N분마다",
+		"type.cron": "사용자 지정 cron",
+
+		"rem.next": "다음",
+		"rem.never": "더 이상 울리지 않음",
+		"rem.disabled": "꺼짐",
+		"rem.last": "지난번",
+		"rem.snooze": "10분 미루기",
+		"rem.enabledOn": "켜짐",
+		"rem.enabledOff": "꺼짐",
+		"unit.day": "일",
+
+		"due.overdue": "기한 지남",
+		"due.today": "오늘",
+		"due.future": "기한",
+		"todo.clearDone": "완료 항목 삭제",
+		"todo.done": "완료",
+		"todo.open": "미완료",
+
+		"agenda.overdue": "기한 지남",
+		"agenda.today": "오늘",
+		"agenda.tomorrow": "내일",
+		"agenda.upcoming": "다가오는 일정",
+		"agenda.week": "향후 7일",
+		"agenda.noDate": "날짜 없음",
+		"agenda.reminders": "알림",
+
+		"cal.month": "{y}년 {m}월",
+		"cal.prev": "지난달",
+		"cal.next": "다음 달",
+		"cal.today": "오늘",
+		"cal.more": "외 {n}건",
+		"cal.empty": "이 날짜에는 일정이 없습니다",
+
+		"action.new": "새로 만들기",
+		"action.edit": "편집",
+		"action.pin": "고정",
+		"action.unpin": "고정 해제",
+		"action.delete": "삭제",
+		"action.save": "저장",
+		"action.cancel": "취소",
+		"action.minimize": "작게 접기",
+		"action.restore": "펼치기",
+		"action.close": "닫기",
+		"action.exportJson": "JSON 내보내기(백업)",
+		"action.exportMd": "Markdown 내보내기",
+		"action.import": "JSON 가져오기…",
+		"action.settings": "설정",
+		"action.refresh": "새로고침",
+		"action.alwaysOnTop": "항상 위에 표시",
+		"action.hide": "상단 바에서 숨기기",
+		"action.copy": "복사",
+		"action.quote": "입력창에 추가",
+		"action.composerBusy": "입력창이 준비되지 않아 클립보드로 복사했습니다",
+		"hint.clickAgain": "(한 번 더 클릭하면 삭제됩니다)",
+
+		"confirm.delete": "「{name}」을(를) 삭제할까요?",
+		"confirm.clearDone": "완료한 할 일 {n}건을 삭제할까요?",
+		"confirm.replace": "덮어쓰기 가져오기를 하면 전체 저장소가 파일 내용으로 교체됩니다. 계속할까요?",
+
+		"settings.toast": "앱 내 알림",
+		"settings.desktop": "데스크톱 알림",
+		"settings.sound": "알림 소리",
+		"settings.desktopDenied": "브라우저가 알림 권한을 거부했습니다(주소창의 권한 설정에서 다시 허용할 수 있습니다)",
+		"settings.soundEnable": "소리를 재생하려면 먼저 페이지에서 한 번 이상 조작해야 합니다",
+		"settings.position": "창 위치 초기화",
+		"settings.autoOpen": "알림 시 창 자동 펼치기",
+		"settings.lang": "언어",
+		"settings.about": "데이터는 <dataDir>/notes/store.json에 저장됩니다. 플러그인을 삭제해도 데이터는 지워지지 않습니다.",
+
+		"notify.title": "노트 알림",
+		"notify.view": "보기",
+		"notify.ahead": "확인",
+		"notify.many": "알림 {n}건",
+
+		"status.notesTotal": "노트 {n}건",
+		"status.notesRemCount": "노트 {n}건 · ⏰ 알림 {m}건",
+		"status.offline": "서버에 연결할 수 없습니다. 잠시 후 자동으로 다시 시도합니다",
+		"status.syncing": "동기화 중…",
+		"status.error": "작업 실패: {e}",
+
+		"import.merge": "병합(같은 id 덮어쓰기)",
+		"import.replace": "교체(비운 뒤 가져오기)",
+		"import.ok": "가져오기 완료: {a}건 추가, {u}건 갱신",
+		"import.fail": "가져오기 실패: {e}",
+		"export.ok": "내보내기 완료",
+
+		"week.0": "일",
+		"week.1": "월",
+		"week.2": "화",
+		"week.3": "수",
+		"week.4": "목",
+		"week.5": "금",
+		"week.6": "토",
+	},
 };
 
 export function detectLang() {
 	try {
 		const raw = String(globalThis.document?.documentElement?.lang ?? "").toLowerCase();
 		if (raw.startsWith("zh")) return "zh";
+		if (raw.startsWith("ko")) return "ko";
 		if (raw) return "en";
 	} catch {}
 	const nav = String(globalThis.navigator?.language ?? "").toLowerCase();
+	if (nav.startsWith("ko")) return "ko";
 	return nav.startsWith("zh") ? "zh" : nav ? "en" : "zh";
 }
 
 export function makeT(lang) {
-	const table = DICT[lang] ?? DICT.zh;
+	const fallback = lang === "ko" ? DICT.en : DICT.zh;
+	const table = DICT[lang] ?? fallback;
 	return (key, params) => {
-		const raw = table[key] ?? DICT.zh[key] ?? key;
+		const raw = table[key] ?? fallback[key] ?? key;
 		if (!params) return raw;
 		return raw.replace(/\{(\w+)\}/g, (m, name) => (params[name] === undefined ? m : String(params[name])));
 	};

@@ -4,6 +4,34 @@ const ACTION_SHOW_DETAILS = "response-speed:show-details";
 const STYLE_ID = "response-speed-styles";
 const MODAL_ID = "response-speed-modal-root";
 
+const IS_KO = /^ko/i.test(String(globalThis.document?.documentElement?.lang || globalThis.navigator?.language || ""));
+const KO = {
+	"极速": "매우 빠름",
+	"良好": "양호",
+	"一般": "보통",
+	"偏慢": "느림",
+	"当前对话暂无历史测速记录": "현재 대화에 측정 기록이 없습니다",
+	"AI 响应速度统计看板（当前对话）": "AI 응답 속도 대시보드(현재 대화)",
+	"关闭": "닫기",
+	"最新请求响应速度 (最新)": "최신 요청 응답 속도 (최신)",
+	"平均响应速度 (均速)": "평균 응답 속도 (평균)",
+	"最快响应时间": "최단 응답 시간",
+	"最慢响应时间": "최장 응답 시간",
+	"💡 <strong>响应速度说明</strong>：统计当前对话向 AI 发起请求到收到首包响应（TTFT）的耗时。每个对话独立记录，提问与 AI 自循环中的每一次 turn 请求均独立测速。":
+		"💡 <strong>응답 속도 안내</strong>: 현재 대화에서 AI에 요청을 보낸 뒤 첫 응답 패킷(TTFT)을 받기까지의 시간을 측정합니다. 대화마다 독립적으로 기록되며, 질문과 AI 자가 루프의 매 turn 요청도 각각 개별 측정됩니다.",
+	"最近响应明细 (当前对话样本总数: {count} 次)": "최근 응답 상세 (현재 대화 샘플 총 {count}회)",
+	"时间": "시간",
+	"首包响应耗时": "첫 응답 소요 시간",
+	"评级": "등급",
+	"清空当前对话统计": "현재 대화 통계 초기화",
+	"确定要清空当前对话的 AI 响应速度统计记录吗？": "현재 대화의 AI 응답 속도 통계 기록을 초기화할까요?",
+};
+function tr(s, vars) {
+	let out = (IS_KO && KO[s]) || s;
+	if (vars) out = out.replace(/\{(\w+)\}/g, (m, k) => (vars[k] ?? m));
+	return out;
+}
+
 function formatMs(ms) {
 	if (ms === null || ms === undefined || typeof ms !== "number") return "--";
 	const n = Number(ms);
@@ -20,10 +48,10 @@ function formatMs(ms) {
 }
 
 function getRating(ms) {
-	if (ms < 800) return { label: "极速", color: "#10b981" };
-	if (ms < 2000) return { label: "良好", color: "#3b82f6" };
-	if (ms < 5000) return { label: "一般", color: "#f59e0b" };
-	return { label: "偏慢", color: "#ef4444" };
+	if (ms < 800) return { label: tr("极速"), color: "#10b981" };
+	if (ms < 2000) return { label: tr("良好"), color: "#3b82f6" };
+	if (ms < 5000) return { label: tr("一般"), color: "#f59e0b" };
+	return { label: tr("偏慢"), color: "#ef4444" };
 }
 
 function apiBase() {
@@ -269,7 +297,7 @@ function renderModalContent() {
 			})
 			.join("");
 	} else {
-		tableRows = `<tr><td colspan="3" style="text-align: center; color: var(--text-dim, #888); padding: 18px;">当前对话暂无历史测速记录</td></tr>`;
+		tableRows = `<tr><td colspan="3" style="text-align: center; color: var(--text-dim, #888); padding: 18px;">${tr("当前对话暂无历史测速记录")}</td></tr>`;
 	}
 
 	const modal = overlay.querySelector(".resp-speed-modal");
@@ -279,42 +307,42 @@ function renderModalContent() {
 		<div class="resp-speed-head">
 			<div class="resp-speed-title">
 				<span>⚡</span>
-				<span>AI 响应速度统计看板（当前对话）</span>
+				<span>${tr("AI 响应速度统计看板（当前对话）")}</span>
 			</div>
-			<button type="button" class="resp-speed-close" aria-label="关闭">&times;</button>
+			<button type="button" class="resp-speed-close" aria-label="${tr("关闭")}">&times;</button>
 		</div>
 		<div class="resp-speed-body">
 			<div class="resp-speed-grid">
 				<div class="resp-speed-card">
-					<span class="resp-speed-card-label">最新请求响应速度 (最新)</span>
+					<span class="resp-speed-card-label">${tr("最新请求响应速度 (最新)")}</span>
 					<span class="resp-speed-card-val highlight">${latestStr}</span>
 				</div>
 				<div class="resp-speed-card">
-					<span class="resp-speed-card-label">平均响应速度 (均速)</span>
+					<span class="resp-speed-card-label">${tr("平均响应速度 (均速)")}</span>
 					<span class="resp-speed-card-val">${avgStr}</span>
 				</div>
 				<div class="resp-speed-card">
-					<span class="resp-speed-card-label">最快响应时间</span>
+					<span class="resp-speed-card-label">${tr("最快响应时间")}</span>
 					<span class="resp-speed-card-val" style="color: #10b981;">${minStr}</span>
 				</div>
 				<div class="resp-speed-card">
-					<span class="resp-speed-card-label">最慢响应时间</span>
+					<span class="resp-speed-card-label">${tr("最慢响应时间")}</span>
 					<span class="resp-speed-card-val" style="color: #ef4444;">${maxStr}</span>
 				</div>
 			</div>
 
 			<div style="font-size: 12px; color: var(--text-dim, #9aa1b4); line-height: 1.5; background: rgba(255,255,255,0.03); padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border-soft, rgba(255,255,255,0.06));">
-				💡 <strong>响应速度说明</strong>：统计当前对话向 AI 发起请求到收到首包响应（TTFT）的耗时。每个对话独立记录，提问与 AI 自循环中的每一次 turn 请求均独立测速。
+				${tr("💡 <strong>响应速度说明</strong>：统计当前对话向 AI 发起请求到收到首包响应（TTFT）的耗时。每个对话独立记录，提问与 AI 自循环中的每一次 turn 请求均独立测速。")}
 			</div>
 
-			<div class="resp-speed-section-title">最近响应明细 (当前对话样本总数: ${count} 次)</div>
+			<div class="resp-speed-section-title">${tr("最近响应明细 (当前对话样本总数: {count} 次)", { count })}</div>
 			<div class="resp-speed-table-wrap">
 				<table class="resp-speed-table">
 					<thead>
 						<tr>
-							<th>时间</th>
-							<th>首包响应耗时</th>
-							<th>评级</th>
+							<th>${tr("时间")}</th>
+							<th>${tr("首包响应耗时")}</th>
+							<th>${tr("评级")}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -324,15 +352,15 @@ function renderModalContent() {
 			</div>
 		</div>
 		<div class="resp-speed-footer">
-			<button type="button" class="resp-speed-btn danger" id="resp-speed-reset-btn">清空当前对话统计</button>
-			<button type="button" class="resp-speed-btn" id="resp-speed-close-btn">关闭</button>
+			<button type="button" class="resp-speed-btn danger" id="resp-speed-reset-btn">${tr("清空当前对话统计")}</button>
+			<button type="button" class="resp-speed-btn" id="resp-speed-close-btn">${tr("关闭")}</button>
 		</div>
 	`;
 
 	modal.querySelector(".resp-speed-close")?.addEventListener("click", closeDashboardModal);
 	modal.querySelector("#resp-speed-close-btn")?.addEventListener("click", closeDashboardModal);
 	modal.querySelector("#resp-speed-reset-btn")?.addEventListener("click", async () => {
-		if (confirm("确定要清空当前对话的 AI 响应速度统计记录吗？")) {
+		if (confirm(tr("确定要清空当前对话的 AI 响应速度统计记录吗？"))) {
 			await resetStats();
 		}
 	});

@@ -97,14 +97,60 @@ const TEXT = {
 		cancel: "Cancel",
 		notice: "Notice",
 	},
+	ko: {
+		title: "프로세스 관리자",
+		subtitle: "pm2로 AI 백그라운드 작업을 통합 관리",
+		probing: "pm2 환경을 확인하는 중…",
+		refresh: "새로고침",
+		notInstalled: "pm2를 찾을 수 없습니다 — 장기 실행 작업을 관리할 수 없고, AI가 실행한 백그라운드 인스턴스가 관리 밖으로 벗어납니다.",
+		install: "pm2 설치",
+		installing: "설치하는 중…",
+		installHint: "터미널에서 npm i -g pm2를 실행하는 것과 같습니다",
+		appsTitle: "pm2로 관리되는 앱",
+		empty: "현재 pm2로 관리되는 앱이 없습니다. AI가 pm2로 앱을 시작하면 이곳에 바로 나타납니다.",
+		name: "이름",
+		status: "상태",
+		cpu: "CPU",
+		mem: "메모리",
+		restarts: "재시작",
+		uptime: "가동 시간",
+		ops: "관리",
+		stop: "정지",
+		restart: "재시작",
+		del: "삭제",
+		logs: "로그",
+		logsEmpty: "(출력 없음)",
+		platform: "플랫폼",
+		busy: "처리 중…",
+		startToggle: "새 앱 시작",
+		startTitle: "pm2에 등록: 한 줄로 백그라운드 서비스 하나 시작",
+		appName: "앱 이름(선택, 기본값은 파일 이름)",
+		script: "시작 엔트리(필수, 예: server.js / npm / python)",
+		cwd: "작업 디렉터리(선택)",
+		args: "추가 인자(선택, 공백으로 구분, 예: run dev)",
+		startBtn: "시작 및 관리",
+		starting: "시작하는 중…",
+		startNeedScript: "시작 엔트리(script)를 먼저 입력하세요(예: server.js).",
+		startHint: "pm2 start <엔트리> --name <앱 이름>과 동일하며, 시작되면 위 표에 표시됩니다.",
+		uninstall: "pm2 제거",
+		uninstalling: "제거하는 중…",
+		uninstallAsk: "pm2를 제거할까요? 관리 중인 모든 앱을 먼저 정지하고(pm2 kill) npm uninstall -g pm2를 실행합니다.",
+		uninstallYes: "네, 제거합니다",
+		uninstallCancel: "취소",
+		uninstallHint: "pm2가 더 필요 없을 때 사용하세요: 데몬 + 전역 패키지를 제거합니다. 앱 하나만 지우려면 표의 '삭제'를 누르세요.",
+		cancel: "취소",
+		notice: "알림",
+	},
 };
 
 import { esc, formatBytes as bytes } from "@pi-web-ui/plugin-sdk/client";
 
 function currentLang() {
 	try {
-		const lang = document.documentElement?.lang ?? navigator.language ?? "zh";
-		return String(lang).toLowerCase().startsWith("zh") ? "zh" : "en";
+		const lang = String(document.documentElement?.lang ?? navigator.language ?? "zh").toLowerCase();
+		if (lang.startsWith("zh")) return "zh";
+		if (lang.startsWith("ko")) return "ko";
+		return "en";
 	} catch {
 		return "zh";
 	}
@@ -188,7 +234,11 @@ let lastKnownState = null;
  * @param {HTMLElement} container
  */
 function createApp(container) {
-	const t = (key) => (TEXT[currentLang()] ?? TEXT.zh)[key] ?? key;
+	// ko 缺键时回退 en；zh/en 行为保持不变。
+	const t = (key) => {
+		const table = TEXT[currentLang()] ?? TEXT.zh;
+		return table[key] ?? (table === TEXT.ko ? TEXT.en[key] : undefined) ?? key;
+	};
 	const root = document.createElement("div");
 	root.className = "pm2m-view";
 	container.appendChild(root);
