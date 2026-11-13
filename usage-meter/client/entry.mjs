@@ -147,7 +147,7 @@ function watchStudio() {
 	observer = new MutationObserver(() => {
 		if (scheduled) return;
 		scheduled = true;
-		requestAnimationFrame(syncStudio);
+		setTimeout(syncStudio, 30);
 	});
 	observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["class"] });
 	syncStudio();
