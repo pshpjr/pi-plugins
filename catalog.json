@@ -33,6 +33,17 @@
 		"homepage": "https://github.com/pshpjr/pi-plugins/tree/main/side-panel"
 	},
 	{
+		"id": "side-chat",
+		"name": "사이드 채팅",
+		"nameEn": "Side Chat",
+		"version": "0.1.0",
+		"icon": "💬",
+		"description": "/btw 사이드 채팅. 메인 대화를 참조해 옆에서 묻고, 원하면 사이드 모델이 메인에 steer로 전달. 사이드 패널(side-panel) 탭 '사이드 채팅'. 기능은 pi 확장(pi-extension/)이 담당하며 따로 설치해야 함.",
+		"descriptionEn": "/btw side chats next to the main conversation (tab in side-panel); needs the bundled pi extension",
+		"source": "pshpjr/pi-plugins/side-chat",
+		"homepage": "https://github.com/pshpjr/pi-plugins/tree/main/side-chat"
+	},
+	{
 		"id": "notes",
 		"name": "노트",
 		"nameEn": "Notes",

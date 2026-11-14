@@ -10,6 +10,7 @@
 | `usage-meter` | 직접 만듦 | 현재 모델 제공자의 사용량·잔여 크레딧 | 하단 바 비용 칸(`setFooterStatus`) + 클릭 팝오버 |
 | `context-lens` | 직접 만듦 | 현재 대화 컨텍스트 분석(dsh-context 방식) | 오른쪽 패널 탭 "Context" |
 | `side-panel` | 직접 만듦 | Codex 앱식 오른쪽 사이드바: 자체 탭 줄(+/×), 같은 종류 여러 개, 위/아래 분할, 대화(sessionId)별 레이아웃 저장. 기본 탭 파일·변경사항(git)·컨텍스트(context-lens 화면). 다른 플러그인은 `window.__piSidePanel.registerTabType`(또는 `__piSidePanelQueue`)로 탭 종류 추가. 호스트 파일 목록·context-lens 탭은 arrange로 숨김. DOM 허용 필요 | 오른쪽 패널 전체 |
+| `side-chat` | 직접 만듦 | `/btw` 사이드 채팅: 메인 대화를 참조하는 별도 세션에서 묻고, 사이드 모델이 `btw_send_to_main`으로 메인에 steer 전달. 기능은 pi 확장(`side-chat/pi-extension/`, `~/.pi/agent/settings.json`의 `extensions`에 경로 등록)이 담당하고 플러그인은 HTTP/SSE 다리 + 탭 UI. 저장은 `~/.pi/agent/side-chats/<메인 sessionId>/`. `/btw`, `/btw:context`, `/btw:tools`, `/btw:list`. 설계는 `side-chat/DESIGN.md`. DOM 허용 필요 | side-panel 탭 "사이드 채팅" |
 | `obsidian-vault` | 직접 만듦 | obsidian-web MCP 도구를 `vault_*` 에이전트 도구로 붙임(시작 때 `tools/list`를 받아 등록, 호출은 `/mcp`로 전달). pi-web-ui MCP 연결은 접두사 없이 늘 실려서 대신 씀 | 설정 → 도구(도구별 상시/필요할 때/끄기) |
 | `notes` | 포크 | 메모·할 일·알림 | |
 | `webmail` | 포크 | IMAP/SMTP 메일 | |
@@ -32,10 +33,13 @@
 <id>/manifest.json
 <id>/index.mjs          서버: export default { activate(host) { ... return deactivate? } }
 <id>/client/entry.mjs   브라우저: view:true 이면 export default { mount(el, ctx) → cleanup }
+                        view:false + preload:true 이면 페이지 열릴 때마다 실행(mount 없이, dispose만 있으면 됨)
 ```
 - 클라이언트 import는 `client/` 밖으로 나가면 안 됨(밖으로 나가면 번들 전체가 조용히 안 뜸).
 - manifest 핵심 필드: `id`, `apiVersion: 2`, `server`, `client`, `view`, `preload`, `permissions`, `netAllowlist`, `ui`.
 - permissions: `http`(host.route), `net`(host.net.fetch, `netAllowlist` 도메인만), `ui`(ui 슬롯), `fs:read` 등.
+- `view:true` 번들은 그 플러그인의 뷰 탭이 열릴 때만 로드된다. 다른 플러그인에 등록만 하는 클라이언트(예: side-panel 탭 종류)는 `view:false` + `preload:true`. default export에 `mount`가 있으면 뷰로 등록돼 숨은 뷰 영역에 마운트되니 넣지 말 것.
+- `dom` 권한: 사용자가 설정 → UI 플러그인에서 허용해야 클라이언트 번들이 나간다(그 전엔 403). 허용·manifest 변경 뒤엔 "다시 스캔"(또는 재시작) 해야 반영됨 — 활성화 때 정보를 캐시함. 페이지는 해시만 바뀌는 이동이 아니라 진짜 새로고침해야 함.
 
 ## 자주 쓰는 패턴
 - **HTTP 라우트**: `host.route("GET", "/summary", (req, res) => res.json(obj))` → 브라우저에서 `/plugins-api/<id>/summary`.
@@ -48,6 +52,7 @@
   `window.__piWebUiHost.setFooterStatus(key, { text, tip, pluginId, content: { render(container) {...} } })`.
   주의: `ui.bottombar`의 kind `badge`는 클릭 시 플러그인 *뷰*를 열려고 해서 `view:false` 플러그인에선 빈 화면이 된다.
 - **오른쪽 패널 탭**: manifest `"ui": { "rightpanel.tabs": [{ "id", "label", "icon", "kind": "view", "view": "plugin:<id>" }] }` + `view: true`.
+- **pi 확장과 연결**: 플러그인 서버와 pi 확장은 같은 node 프로세스라 `globalThis`의 등록부로 직접 부른다(side-chat 참고). 플러그인 `host.broadcast`는 열린 뷰에만 가므로 계속 받을 이벤트는 SSE 라우트로(`cache-control: no-transform` + `res.flush()`로 압축 버퍼링 회피).
 - **모달**: `ui.modal`에 kind view 항목 → `__piWebUiHost.openModal("<id>:<itemId>")`.
 - 브라우저 호스트 브리지 `window.__piWebUiHost`: setView, openModal/closeModal, setFooterStatus, onUiAction, onTheme, onLocale, models, sessions 등.
   `host.models.list()`엔 컨텍스트 윈도 크기가 없다. 필요하면 하단 바 `[data-bar-item="host:ctx"]`의 title("… / 1M")을 읽는다.
