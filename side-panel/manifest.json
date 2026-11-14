@@ -1,0 +1,24 @@
+{
+	"id": "side-panel",
+	"name": "Side Panel",
+	"version": "0.1.0",
+	"description": "오른쪽 패널을 Codex 앱처럼 쓰는 사이드바. 탭 여러 개(+/×), 같은 종류 여러 개, 위/아래 분할, 대화별 레이아웃 저장. 기본 탭: 파일(미리보기·편집·업로드), 변경사항(git), 컨텍스트(context-lens). 다른 플러그인은 window.__piSidePanel.registerTabType 으로 탭 종류를 추가할 수 있음.",
+	"descriptionEn": "Codex-style right sidebar: own tab strip, multiple instances, top/bottom split, per-conversation layout; other plugins add tab kinds via window.__piSidePanel.registerTabType",
+	"author": "pshpjr",
+	"icon": "🗂️",
+	"apiVersion": 2,
+	"server": "index.mjs",
+	"client": "client/entry.mjs",
+	"view": true,
+	"permissions": ["ui", "http", "fs:read", "fs:write", "dom"],
+	"ui": {
+		"rightpanel.tabs": [
+			{ "id": "panel", "label": "사이드 패널", "labelEn": "Side Panel", "icon": "🗂️", "kind": "view", "view": "plugin:side-panel", "order": 1 }
+		],
+		"arrange": [
+			{ "id": "host:right-files", "hide": true },
+			{ "id": "context-lens:panel", "hide": true },
+			{ "id": "side-panel:__view", "hide": true }
+		]
+	}
+}
