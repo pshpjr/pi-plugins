@@ -1,5 +1,6 @@
 // usage-meter: shows usage limits / remaining credit for every provider logged in to pi,
-// as bottom-bar badges in pi-web-ui. Refreshes every REFRESH_MS on the server.
+// in the pi-web-ui bottom bar for the conversation (#s= session id) being viewed;
+// model changes are pushed to the browser over SSE (/events), no polling.
 //
 // Credentials are read (never written) from pi's own store:
 //   ~/.pi/agent/auth.json           OAuth tokens and API keys
@@ -199,9 +200,51 @@ function collectorFor(model) {
 	return PROVIDER_OF[seg] ?? "";
 }
 
+// session id <- snapshot.sessionFile (".../<ts>_<sessionId>.jsonl")
+function sidOf(snap) {
+	const f = snap && typeof snap === "object" ? snap.sessionFile : "";
+	return (String(f || "").match(/_([\w-]+)\.jsonl$/) || [])[1] || "";
+}
+
+// Model of a session read from its jsonl (last model_change, else last assistant message).
+// Used when no change event was seen yet (server restart, old conversation opened).
+function modelFromFile(sid) {
+	if (!/^[\w-]+$/.test(sid)) return "";
+	const root = path.join(AGENT_DIR, "sessions");
+	let file = "";
+	try {
+		for (const d of fs.readdirSync(root)) {
+			const dir = path.join(root, d);
+			const hit = fs.readdirSync(dir).find((n) => n.endsWith(`_${sid}.jsonl`));
+			if (hit) { file = path.join(dir, hit); break; }
+		}
+	} catch {}
+	if (!file) return "";
+	try {
+		const size = fs.statSync(file).size;
+		const len = Math.min(size, 512 * 1024);
+		const buf = Buffer.alloc(len);
+		const fd = fs.openSync(file, "r");
+		try { fs.readSync(fd, buf, 0, len, size - len); } finally { fs.closeSync(fd); }
+		const lines = buf.toString("utf8").split("\n");
+		for (let i = lines.length - 1; i >= 0; i--) {
+			const l = lines[i];
+			if (!l.includes('"model_change"') && !l.includes('"role":"assistant"')) continue;
+			let e; try { e = JSON.parse(l); } catch { continue; }
+			if (e.type === "model_change" && e.provider && e.modelId) return `${e.provider}/${e.modelId}`;
+			const m = e.message;
+			if (m?.role === "assistant" && m.provider && m.model) return `${m.provider}/${m.model}`;
+		}
+	} catch {}
+	return "";
+}
+
 export default {
 	activate(host) {
-		const state = { model: "", cache: new Map() };
+		// sessionId -> "provider/model". Each browser tab/conversation has its own entry.
+		const models = new Map();
+		const state = { latest: "", cache: new Map() };
+		const sse = new Set();
 
 		const readModel = () => {
 			try {
@@ -228,14 +271,26 @@ export default {
 			return entry;
 		}
 
-		async function summary(force) {
-			if (!state.model) state.model = readModel();
-			const id = collectorFor(state.model);
-			if (!id) return { ok: true, model: state.model, active: "", footer: null };
+		function modelFor(sid) {
+			if (sid) {
+				let m = models.get(sid);
+				if (!m) {
+					m = modelFromFile(sid);
+					if (m) models.set(sid, m);
+				}
+				if (m) return m;
+			}
+			return state.latest || readModel();
+		}
+
+		async function summary(sid, force) {
+			const model = modelFor(sid);
+			const id = collectorFor(model);
+			if (!id) return { ok: true, model, active: "", footer: null };
 			const r = await load(id, force);
 			return {
 				ok: true,
-				model: state.model,
+				model,
 				active: id,
 				name: NAME[id],
 				lines: String(r.hint || "").split(" / ").filter(Boolean),
@@ -246,9 +301,25 @@ export default {
 
 		host.route("GET", "/summary", (req, res) => {
 			const force = String(req?.query?.force ?? "") === "1";
-			summary(force)
+			const sid = String(req?.query?.s ?? "");
+			summary(sid, force)
 				.then((p) => res.json(p))
 				.catch((e) => res.status(500).json({ ok: false, error: String(e?.message || e) }));
+		});
+
+		// Pushes {type:"model", sid, model, active} whenever a conversation's model changes,
+		// so the browser re-renders at once instead of polling.
+		host.route("GET", "/events", (req, res) => {
+			res.setHeader("content-type", "text/event-stream; charset=utf-8");
+			res.setHeader("cache-control", "no-cache, no-transform");
+			res.setHeader("connection", "keep-alive");
+			res.setHeader("x-accel-buffering", "no");
+			res.flushHeaders?.();
+			res.write(`data: ${JSON.stringify({ type: "hello" })}\n\n`);
+			res.flush?.();
+			sse.add(res);
+			const ping = setInterval(() => { try { res.write(": ping\n\n"); res.flush?.(); } catch {} }, 20000);
+			req.on("close", () => { clearInterval(ping); sse.delete(res); });
 		});
 
 		// Per-provider card for the Model Studio injection: ?id=claude|codex|copilot|zai|deepseek
@@ -271,16 +342,23 @@ export default {
 				.catch((e) => res.status(500).json({ ok: false, error: String(e?.message || e) }));
 		});
 
-		host.onClientModelChanged?.((snap) => {
+		const offModel = host.onClientModelChanged?.((snap) => {
 			const m = modelOf(snap);
-			if (m) state.model = m;
-			host.log("info", `model -> ${state.model}`);
+			if (!m) return;
+			const sid = sidOf(snap);
+			state.latest = m;
+			if (sid) models.set(sid, m);
+			host.log("info", `model -> ${m} (${sid || "no session yet"})`);
+			const line = `data: ${JSON.stringify({ type: "model", sid, model: m, active: collectorFor(m) })}\n\n`;
+			for (const r of sse) { try { r.write(line); r.flush?.(); } catch {} }
 		});
-		host.onConversationChanged?.(() => {
-			const m = readModel();
-			if (m) state.model = m;
-		});
-		state.model = readModel();
-		host.log("info", `initial model: ${state.model || "(none)"}`);
+		state.latest = readModel();
+		host.log("info", `initial model: ${state.latest || "(none)"}`);
+
+		return () => {
+			offModel?.();
+			for (const r of sse) { try { r.end(); } catch {} }
+			sse.clear();
+		};
 	},
 };

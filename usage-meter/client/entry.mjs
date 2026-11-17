@@ -1,9 +1,10 @@
 // usage-meter client: polls the server summary and hands the text to the host's built-in
 // footer status slot (next to the cost cell). Clicking it opens a host popover that renders
-// the card below. Only the provider of the current session's model is shown.
+// the card below. Only the provider of the current conversation's model is shown.
+// No polling: the footer refreshes when the conversation changes (#s= hash), when the server
+// pushes a model change over SSE (/events), and on window focus.
 const PLUGIN_ID = "usage-meter";
 const FOOTER_KEY = "usage-meter";
-const POLL_MS = 60_000;
 const KEY = "__piUsageMeter";
 
 globalThis[KEY]?.destroy?.();
@@ -17,19 +18,31 @@ const base = (() => {
 
 let data = null;
 let last = "";
-let timer = null;
+let es = null;
+let seq = 0;
 let disposed = false;
+const byProvider = new Map(); // provider id -> last summary, shown at once when switching back
 const listeners = new Set();
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
+const sessionId = () => (location.hash.match(/[#&]s=([\w-]+)/) || [])[1] || "";
+
 async function refresh(force = false) {
+	const my = ++seq;
+	const q = new URLSearchParams();
+	const sid = sessionId();
+	if (sid) q.set("s", sid);
+	if (force) q.set("force", "1");
 	try {
-		const r = await fetch(`${base}/summary${force ? "?force=1" : ""}`, { credentials: "same-origin" });
+		const r = await fetch(`${base}/summary${q.size ? `?${q}` : ""}`, { credentials: "same-origin" });
 		const j = await r.json();
 		if (!r.ok || j.ok === false) throw new Error(j.error || `HTTP ${r.status}`);
+		if (my !== seq) return; // a newer request (another conversation/model) superseded this one
 		data = j;
+		if (j.active) byProvider.set(j.active, j);
 	} catch (e) {
+		if (my !== seq) return;
 		data = { ...(data || {}), error: String(e.message || e) };
 	}
 	for (const fn of [...listeners]) try { fn(data); } catch {}
@@ -77,15 +90,32 @@ function push() {
 	host()?.setFooterStatus?.(FOOTER_KEY, f ? { text: f.text, tip: f.tip, pluginId: PLUGIN_ID, content: { render } } : null);
 }
 
-function loop() {
-	if (disposed) return;
-	timer = setTimeout(async () => {
-		if (document.visibilityState !== "hidden") await refresh(false);
-		loop();
-	}, POLL_MS);
-}
-
 function onFocus() { refresh(false); }
+function onHash() { refresh(false); }
+
+// Server pushes model changes. Show the new provider's last known value (or "…") at once,
+// then fetch the fresh one.
+function connectEvents() {
+	if (disposed || es) return;
+	try {
+		es = new EventSource(`${base}/events`, { withCredentials: true });
+		es.onmessage = (m) => {
+			let ev; try { ev = JSON.parse(m.data); } catch { return; }
+			if (ev.type === "hello") return refresh(false); // (re)connected: resync
+			if (ev.type !== "model") return;
+			const mine = sessionId();
+			if (ev.sid && mine && ev.sid !== mine) return; // another conversation
+			if (ev.active !== data?.active) {
+				const cached = ev.active ? byProvider.get(ev.active) : null;
+				data = cached ?? (ev.active ? { ok: true, active: ev.active, model: ev.model, footer: { text: "…", tip: "" }, lines: [] } : { ok: true, active: "", model: ev.model, footer: null });
+				for (const fn of [...listeners]) try { fn(data); } catch {}
+				push();
+			}
+			refresh(false);
+		};
+		// EventSource reconnects by itself; "hello" resyncs afterwards
+	} catch {}
+}
 
 // ---- Model Studio injection (needs the "dom" permission) ----
 // The host's "모델 관리" modal has no plugin slot, so we watch for it and add a usage card
@@ -157,15 +187,18 @@ function destroy() {
 	disposed = true;
 	observer?.disconnect();
 	document.querySelectorAll(`[${CARD_ATTR}]`).forEach((e) => e.remove());
-	clearTimeout(timer);
+	es?.close();
+	es = null;
 	window.removeEventListener("focus", onFocus);
+	window.removeEventListener("hashchange", onHash);
 	host()?.setFooterStatus?.(FOOTER_KEY, null);
 }
 
 globalThis[KEY] = { destroy, refresh };
 window.addEventListener("focus", onFocus);
+window.addEventListener("hashchange", onHash);
 refresh(false);
-loop();
+connectEvents();
 watchStudio();
 
 export default { dispose: destroy };
