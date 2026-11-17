@@ -1,0 +1,15 @@
+{
+	"id": "sidebar-cleanup",
+	"name": "Sidebar Cleanup",
+	"version": "0.2.0",
+	"description": "왼쪽 대화 목록을 Claude 앱처럼 정리합니다. 시간·'현재' 표시와 그룹 탭을 숨기고, 행 아이콘을 호버 시 '…' 메뉴(이름 변경·삭제)로 바꾸며, 서브 에이전트 대화를 부모 대화 아래에 들여써서 붙입니다. 분기 태그 대신 분기된 대화 위에 부모 대화 링크를 띄웁니다. DOM 접근 허용이 필요합니다.",
+	"descriptionEn": "Claude-app style left conversation list: hides timestamps, the 'current' badge and the Groups tab, replaces row icons with a hover '…' menu (rename / delete), nests subagent conversations under their parent, and shows a 'forked from' link above forked conversations instead of a fork tag.",
+	"author": "pshpjr",
+	"icon": "☰",
+	"apiVersion": 2,
+	"server": "index.mjs",
+	"client": "client/entry.mjs",
+	"view": false,
+	"preload": true,
+	"permissions": ["ui", "http", "dom"]
+}
