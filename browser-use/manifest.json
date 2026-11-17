@@ -1,7 +1,7 @@
 {
 	"id": "browser-use",
 	"name": "browser-use",
-	"version": "0.10.2-ko.1",
+	"version": "0.10.2+ko.1",
 	"icon": "🌐",
 	"iconSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20\"/><path d=\"M2 12h20\"/></svg>",
 	"description": "상주 Chrome 자동화와 통합 검색: 백그라운드(헤드리스)와 실제 창 전환, 검색 엔진 자동 전환, 빠른 검색 모드, 검색 전용 탭을 지원합니다.",

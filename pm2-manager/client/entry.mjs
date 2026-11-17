@@ -1,3 +1,6 @@
+import { esc, formatBytes as bytes } from "@pi-web-ui/plugin-sdk/client";
+import { makeT } from "./i18n.mjs";
+
 function resolveApiBase(importMetaUrl) {
 	const base = String(importMetaUrl);
 	const idx = base.indexOf("/plugins/");
@@ -6,155 +9,6 @@ function resolveApiBase(importMetaUrl) {
 }
 
 const API = resolveApiBase(import.meta.url);
-
-const TEXT = {
-	zh: {
-		title: "进程管家",
-		subtitle: "pm2 统一托管 AI 的后台任务",
-		probing: "正在检测 pm2 环境…",
-		refresh: "刷新",
-		notInstalled: "未检测到 pm2 —— 长期任务无法托管，AI 起的后台实例会脱离管理面。",
-		install: "安装 pm2",
-		installing: "正在安装…",
-		installHint: "等价于在终端执行 npm i -g pm2",
-		appsTitle: "pm2 托管的应用",
-		empty: "pm2 当前没有托管任何应用。让 AI 用 pm2 起服务后，这里会自动出现。",
-		name: "名称",
-		status: "状态",
-		cpu: "CPU",
-		mem: "内存",
-		restarts: "重启",
-		uptime: "时长",
-		ops: "操作",
-		stop: "停止",
-		restart: "重启",
-		del: "删除",
-		logs: "日志",
-		logsEmpty: "（无输出）",
-		platform: "平台",
-		busy: "执行中…",
-		startToggle: "启动新应用",
-		startTitle: "安装到 pm2：一行起一个后台服务",
-		appName: "应用名（可选，默认取文件名）",
-		script: "启动入口（必填，如 server.js / npm / python）",
-		cwd: "工作目录（可选）",
-		args: "附加参数（可选，空格分隔，如 run dev）",
-		startBtn: "启动并托管",
-		starting: "正在启动…",
-		startNeedScript: "请先填启动入口（script），如 server.js。",
-		startHint: "等价于 pm2 start <入口> --name <应用名>，起好后出现在上表，可停可删可看日志。",
-		uninstall: "卸载 pm2",
-		uninstalling: "正在卸载…",
-		uninstallAsk: "确认卸载 pm2 本体？会先停掉所有托管应用（pm2 kill），再执行 npm uninstall -g pm2。",
-		uninstallYes: "确认卸载",
-		uninstallCancel: "取消",
-		uninstallHint: "不用 pm2 了点这里：删守护进程 + 卸全局包。删单个应用点表里的“删除”。",
-		cancel: "取消",
-		notice: "提示",
-	},
-	en: {
-		title: "Process Manager",
-		subtitle: "All AI background tasks supervised by pm2",
-		probing: "Checking the pm2 environment…",
-		refresh: "Refresh",
-		notInstalled: "pm2 not found — long-lived tasks cannot be supervised; AI background instances escape management.",
-		install: "Install pm2",
-		installing: "Installing…",
-		installHint: "Same as running npm i -g pm2 in a terminal",
-		appsTitle: "pm2-supervised apps",
-		empty: "pm2 supervises no app right now. Apps appear here as soon as the AI starts them through pm2.",
-		name: "Name",
-		status: "Status",
-		cpu: "CPU",
-		mem: "Memory",
-		restarts: "Restarts",
-		uptime: "Uptime",
-		ops: "Actions",
-		stop: "Stop",
-		restart: "Restart",
-		del: "Delete",
-		logs: "Logs",
-		logsEmpty: "(no output)",
-		platform: "Platform",
-		busy: "working…",
-		startToggle: "Start a new app",
-		startTitle: "Install into pm2: one line starts one background service",
-		appName: "App name (optional, defaults to file name)",
-		script: "Entry (required, e.g. server.js / npm / python)",
-		cwd: "Working directory (optional)",
-		args: "Extra args (optional, space-separated, e.g. run dev)",
-		startBtn: "Start & supervise",
-		starting: "Starting…",
-		startNeedScript: "Please fill in the entry (script) first, e.g. server.js.",
-		startHint: "Same as pm2 start <entry> --name <app>; it shows up in the table above once started.",
-		uninstall: "Uninstall pm2",
-		uninstalling: "Uninstalling…",
-		uninstallAsk:
-			"Uninstall pm2 itself? This stops every supervised app first (pm2 kill), then runs npm uninstall -g pm2.",
-		uninstallYes: "Yes, uninstall",
-		uninstallCancel: "Cancel",
-		uninstallHint: "Done with pm2? This removes the daemon + global package. To drop one app use Delete in the table.",
-		cancel: "Cancel",
-		notice: "Notice",
-	},
-	ko: {
-		title: "프로세스 관리자",
-		subtitle: "pm2로 AI 백그라운드 작업을 통합 관리",
-		probing: "pm2 환경을 확인하는 중…",
-		refresh: "새로고침",
-		notInstalled: "pm2를 찾을 수 없습니다 — 장기 실행 작업을 관리할 수 없고, AI가 실행한 백그라운드 인스턴스가 관리 밖으로 벗어납니다.",
-		install: "pm2 설치",
-		installing: "설치하는 중…",
-		installHint: "터미널에서 npm i -g pm2를 실행하는 것과 같습니다",
-		appsTitle: "pm2로 관리되는 앱",
-		empty: "현재 pm2로 관리되는 앱이 없습니다. AI가 pm2로 앱을 시작하면 이곳에 바로 나타납니다.",
-		name: "이름",
-		status: "상태",
-		cpu: "CPU",
-		mem: "메모리",
-		restarts: "재시작",
-		uptime: "가동 시간",
-		ops: "관리",
-		stop: "정지",
-		restart: "재시작",
-		del: "삭제",
-		logs: "로그",
-		logsEmpty: "(출력 없음)",
-		platform: "플랫폼",
-		busy: "처리 중…",
-		startToggle: "새 앱 시작",
-		startTitle: "pm2에 등록: 한 줄로 백그라운드 서비스 하나 시작",
-		appName: "앱 이름(선택, 기본값은 파일 이름)",
-		script: "시작 엔트리(필수, 예: server.js / npm / python)",
-		cwd: "작업 디렉터리(선택)",
-		args: "추가 인자(선택, 공백으로 구분, 예: run dev)",
-		startBtn: "시작 및 관리",
-		starting: "시작하는 중…",
-		startNeedScript: "시작 엔트리(script)를 먼저 입력하세요(예: server.js).",
-		startHint: "pm2 start <엔트리> --name <앱 이름>과 동일하며, 시작되면 위 표에 표시됩니다.",
-		uninstall: "pm2 제거",
-		uninstalling: "제거하는 중…",
-		uninstallAsk: "pm2를 제거할까요? 관리 중인 모든 앱을 먼저 정지하고(pm2 kill) npm uninstall -g pm2를 실행합니다.",
-		uninstallYes: "네, 제거합니다",
-		uninstallCancel: "취소",
-		uninstallHint: "pm2가 더 필요 없을 때 사용하세요: 데몬 + 전역 패키지를 제거합니다. 앱 하나만 지우려면 표의 '삭제'를 누르세요.",
-		cancel: "취소",
-		notice: "알림",
-	},
-};
-
-import { esc, formatBytes as bytes } from "@pi-web-ui/plugin-sdk/client";
-
-function currentLang() {
-	try {
-		const lang = String(document.documentElement?.lang ?? navigator.language ?? "zh").toLowerCase();
-		if (lang.startsWith("zh")) return "zh";
-		if (lang.startsWith("ko")) return "ko";
-		return "en";
-	} catch {
-		return "zh";
-	}
-}
 
 function uptime(startedAt) {
 	const ms = Date.now() - Number(startedAt || 0);
@@ -234,11 +88,7 @@ let lastKnownState = null;
  * @param {HTMLElement} container
  */
 function createApp(container) {
-	// ko 缺键时回退 en；zh/en 行为保持不变。
-	const t = (key) => {
-		const table = TEXT[currentLang()] ?? TEXT.zh;
-		return table[key] ?? (table === TEXT.ko ? TEXT.en[key] : undefined) ?? key;
-	};
+	const t = makeT();
 	const root = document.createElement("div");
 	root.className = "pm2m-view";
 	container.appendChild(root);

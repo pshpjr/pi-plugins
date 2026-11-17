@@ -2,7 +2,7 @@
 	"id": "pm2-manager",
 	"name": "프로세스 관리",
 	"nameEn": "Process Manager",
-	"version": "0.4.0-ko.2",
+	"version": "0.4.2+ko.1",
 	"icon": "🚀",
 	"iconSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2\" y=\"2\" width=\"20\" height=\"8\" rx=\"2\"/><rect x=\"2\" y=\"14\" width=\"20\" height=\"8\" rx=\"2\"/><line x1=\"6\" y1=\"6\" x2=\"6.01\" y2=\"6\"/><line x1=\"6\" y1=\"18\" x2=\"6.01\" y2=\"18\"/></svg>",
 	"description": "pm2 설치·관리·제거: pm2가 없으면 한 번에 설치하고, 패널에서 새 앱을 바로 시작(pm2에 등록)하고 앱을 관리합니다.",
